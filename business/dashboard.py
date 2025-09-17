@@ -37,6 +37,10 @@ class DashboardBusiness:
                 
                 num_sorteio_cliente = cliente_result[0][4]  # num_sorteio é o 5º campo
 
+                # Buscar informações do sorteio atual
+                sorteio_sql = "SELECT num_sorteio, descricao FROM tab_sorteio WHERE num_sorteio = ?"
+                sorteio_result = db.execute_select(sorteio_sql, (num_sorteio_cliente,))
+
                 # Buscar total de notas cadastradas do sorteio atual do cliente
                 notas_sql = "SELECT COUNT(*) FROM tab_nota WHERE cpf = ? AND num_sorteio = ?"
                 notas_result = db.execute_select(notas_sql, (cpf, num_sorteio_cliente))
@@ -68,7 +72,9 @@ class DashboardBusiness:
                     if valor_validado_result else 0,
                     'notas_pendentes':
                     notas_pendentes_result[0][0]
-                    if notas_pendentes_result else 0
+                    if notas_pendentes_result else 0,
+                    'sorteio':
+                    sorteio_result[0] if sorteio_result else (num_sorteio_cliente, 'Sorteio Atual')
                 }
             else:
                 # Fallback: usar dados de exemplo
@@ -85,6 +91,9 @@ class DashboardBusiness:
 
                 if not cliente_info:
                     return None
+
+                # Dados de sorteio de exemplo
+                sorteio_info = (num_sorteio_cliente, f'Sorteio {num_sorteio_cliente} - Exemplo')
 
                 # Filtrar apenas por CPF e num_sorteio do cliente
                 total_notas = len([
@@ -115,7 +124,9 @@ class DashboardBusiness:
                     'valor_validado':
                     valor_validado,
                     'notas_pendentes':
-                    notas_pendentes
+                    notas_pendentes,
+                    'sorteio':
+                    sorteio_info
                 }
 
             return resumo
@@ -127,7 +138,8 @@ class DashboardBusiness:
                 'total_notas': 0,
                 'total_numeros': 0,
                 'valor_validado': 0,
-                'notas_pendentes': 0
+                'notas_pendentes': 0,
+                'sorteio': (1, 'Sorteio de Exemplo')
             }
 
     @staticmethod
