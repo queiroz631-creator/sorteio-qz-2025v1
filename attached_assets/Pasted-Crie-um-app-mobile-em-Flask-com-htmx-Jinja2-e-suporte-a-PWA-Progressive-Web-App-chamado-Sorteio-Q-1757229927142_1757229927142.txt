@@ -1,0 +1,105 @@
+Crie um app mobile em Flask com htmx, Jinja2 e suporte a PWA (Progressive Web App) chamado Sorteio QZ.
+Requisitos gerais:
+·Banco de dados: SQL Server (usar dados de exemplo caso não consiga conectar).
+·Organização:
+oUma rota para cada página.
+oUma pasta separada para a regra de negócio.
+oUm arquivo separado para a conexão com SQL Server.
+·Interface moderna, responsiva e avermelhada.
+·Tema claro/escuro (switch dark mode/light mode).
+·Logotipo simples com nome Sorteio QZ na dashboard.
+·Comentários explicando as principais partes do código.
+·Tratamento de erros nas requisições.
+·Todo texto deve estar em português do Brasil.
+
+Estrutura do Aplicativo
+1. Tela Inicial
+·Exibe informações sobre o sorteio.
+·Botão “Participar”, que direciona para a tela de cadastro.
+2. Tela de Cadastro do Cliente
+Campos:
+·Nome completo
+·CPF
+·Telefone
+Botão para cadastrar → redireciona para a Dashboard.
+3. Dashboard do Cliente
+Exibe:
+·Resumo:
+oQuantos cupons foram cadastrados.
+oQuantos números da sorte foram gerados.
+·Informações do participante (nome, CPF e telefone).
+·Quatro botões principais:
+1.Cadastrar Nota
+2.Mostrar Notas
+3.Mostrar Números
+4.Informações
+
+Funcionalidades
+Cadastrar Nota
+·Campos: valor e número da nota.
+·Botão para cadastrar e voltar.
+·Regra:
+oA cada R$20,00 em notas validadas, gera 01 número da sorte.
+Mostrar Notas
+·Lista de todas as notas cadastradas.
+·Exibir se foi validada ou não.
+·Caso não validada, deve exibir botões de Editar e Excluir.
+Mostrar Números
+·Lista de todos os números da sorte gerados.
+·Exibir também a data de geração.
+Informações
+·Mostrar regras completas do sorteio.
+·Mostrar os prêmios.
+
+Banco de Dados
+Nome do banco: Sorteio_qz
+Criar um arquivo db.py com a conexão ao SQL Server.
+Exemplos de select, insert, edit e delete.
+Função utilitária para chamadas de procedures:
+def procedure(nome_proc, lista=[]):
+    proc = ""
+    contador = 0
+    for item in lista:
+        if contador == 0:
+            proc = item
+        else:
+            proc += f",{item}"
+        contador += 1 
+
+    exec = f"exec {nome_proc} {proc}"
+    return exec.strip()
+
+Formato de uso (antes de chamar procedure, montar lista):
+lista = [
+    "@opcao=1",
+    f"@nome='{nome}'",
+    f"@cpf='{cpf}'",
+    f"@telefone='{telefone}'",
+    f"@data_cadastro='{data_cadastro}'"
+]
+sql = procedure("proc_cliente_insert", lista)
+
+
+Procedures usadas
+1.Cadastro cliente
+oproc_cliente_insert
+oParâmetros: nome, cpf, telefone, data_cadastro
+2.Cadastro nota
+oproc_nota_insert
+oParâmetros: valor, num_nota, cpf, data_cadastro
+3.Cadastro número da sorte
+oproc_numero_sorte_insert
+oParâmetros: num_sorte, cpf, data_cadastro
+4.Cadastro histórico sorteio
+oproc_historico_sorteio_insert
+oParâmetros: id_cliente, versao_sorteio, data_cadastro, saldo_anterior
+
+Extras
+·Design moderno avermelhado.
+·Dark mode/light mode.
+·PWA configurado (manifest.json e service worker).
+·Comentários explicativos no código.
+
+👉 Esse prompt já está estruturado para que qualquer gerador de código consiga criar um projeto completo com todas as funcionalidades descritas.
+Quer que eu já gere o projeto Flask inteiro no formato ZIP com essa estrutura pronta para rodar, incluindo rotas, templates, conexão de banco e dados de exemplo?
+
